@@ -132,7 +132,7 @@ enum hw_http_method
 };
 
 #define STRLENOF(s) sizeof(s)-1
-#define SETSTRING(s,val) s.value=val; s.length=STRLENOF(val)
+#define SETSTRING(s,val) s.value=(char*)val; s.length=STRLENOF(val)
 #define APPENDSTRING(s,val) memcpy((char*)s->value + s->length, val, STRLENOF(val)); s->length+=STRLENOF(val)
 
 typedef struct
