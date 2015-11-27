@@ -33,8 +33,8 @@ extern uv_async_t* listener_async_handles;
 extern uv_loop_t* listener_event_loops;
 extern uv_barrier_t* listeners_created_barrier;
 
-void (*http_stream_on_read)(uv_stream_t*, ssize_t, const uv_buf_t*);
-int (*http_server_write_response)(hw_write_context*, hw_string*);
+extern void (*http_stream_on_read)(uv_stream_t*, ssize_t, const uv_buf_t*);
+extern int (*http_server_write_response)(hw_write_context*, hw_string*);
 
 http_connection* create_http_connection();
 void http_stream_on_connect(uv_stream_t* stream, int status);
