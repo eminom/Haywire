@@ -4,6 +4,7 @@
 #include "connection_dispatcher.h"
 #include "connection_consumer.h"
 
+void print_configuration();
 static struct sockaddr_in listen_addr;
 
 void ipc_close_cb(uv_handle_t* handle)
