@@ -66,7 +66,7 @@ hw_string* create_response_buffer(hw_http_response* response)
 
     int i = 0;
 
-    response_string->value = calloc(1024, 1);
+    response_string->value = calloc(1024 * 1024, 1);
     response_string->length = 0;
     append_string(response_string, cached_entry);
     
