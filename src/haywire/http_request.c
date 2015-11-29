@@ -260,11 +260,16 @@ void get_404_response(http_request* request, http_response* response)
 int http_request_on_message_complete(http_parser* parser)
 {
     http_connection* connection = (http_connection*)parser->data;
-    hw_route_entry* route_entry = get_route_callback(connection->request->url);
+    //hw_route_entry* route_entry = get_route_callback(connection->request->url);
+	hw_route_entry* route_entry;
     hw_string* response_buffer;
     hw_write_context* write_context;
     hw_http_response* response = hw_create_http_response(connection);
-    
+	char *temp_url = (char*)malloc((strlen(connection->request->url)+1)*sizeof(char));
+	strcpy(temp_url, connection->request->url);
+	route_entry = get_route_callback(temp_url);
+	free(temp_url);
+  
     if (route_entry != NULL)
     {
         route_entry->callback(connection->request, response, route_entry->user_data);
