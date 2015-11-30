@@ -211,7 +211,20 @@ hw_route_entry* get_route_callback(char* url)
     const char* v;
      
     khash_t(string_hashmap) *h = routes;
-     
+
+	// Since url is now in temp buffer(Windows's C runtime strtok_r will spoil this buffer, and make /fetch/xx into /fetch\00xx)
+	//~ But unix won't, the url will remain the same as it is
+	//~ we shall cut the url into the form we need.
+	char *sp = strchr(url, '/');
+	if(sp==url)
+	{
+		sp = strchr(sp+1, '/');
+	}
+	if(sp)
+	{
+		*sp = 0; // cut.
+	}
+    
     kh_foreach(h, k, v,
     {
         int found = hw_route_compare_method(url, k);
