@@ -65,6 +65,8 @@ hw_string* create_response_buffer(hw_http_response* response)
     hw_string content_length;
 
     int i = 0;
+	int length_plus = 3;
+	const char *text_lead = "text/";
 
     response_string->value = calloc(1024 * 1024, 1);
     response_string->length = 0;
@@ -78,11 +80,27 @@ hw_string* create_response_buffer(hw_http_response* response)
         append_string(response_string, &header.value);
         APPENDSTRING(response_string, CRLF);
     }
+
+	//Check the plus length by checking header<content-type>
+	for(i=0; i< resp->number_of_headers; ++i)
+	{
+		http_header header = resp->headers[i];
+		if ( ! strcmp(header.name.value, "Content-Type") )
+		{
+			//~ A text based page.(content)
+			if ( strncmp(header.value.value, text_lead, strlen(text_lead)))
+			{
+				// Not a text-lead
+				length_plus = 0;
+			}
+			break;
+		}
+	}
     
     /* Add the body */
     APPENDSTRING(response_string, "Content-Length: ");
     
-    string_from_int(&content_length, resp->body.length + 3, 10);
+    string_from_int(&content_length, resp->body.length + length_plus, 10);
     append_string(response_string, &content_length);
     APPENDSTRING(response_string, CRLF CRLF);
     
