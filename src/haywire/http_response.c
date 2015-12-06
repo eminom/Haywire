@@ -66,7 +66,7 @@ hw_string* create_response_buffer(hw_http_response* response)
 
     int i = 0;
 	int length_plus = 3;
-	const char *text_lead = "text/";
+	const char *text_lead = "text/html";
 
     response_string->value = calloc(1024 * 1024, 1);
     response_string->length = 0;
@@ -88,7 +88,8 @@ hw_string* create_response_buffer(hw_http_response* response)
 		if ( ! strcmp(header.name.value, "Content-Type") )
 		{
 			//~ A text based page.(content)
-			if ( strncmp(header.value.value, text_lead, strlen(text_lead)))
+			//if ( strncmp(header.value.value, text_lead, strlen(text_lead)))
+			if (strcmp(header.value.value, text_lead))
 			{
 				// Not a text-lead
 				length_plus = 0;
