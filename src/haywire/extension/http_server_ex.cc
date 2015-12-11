@@ -12,9 +12,8 @@ extern "C" {
 }
 
 #include <fcntl.h>
-
-#include <cstring>
-#include <cstdlib>
+#include <string.h>
+#include <stdlib.h>
 
 #define READ_BUFF_LENGTH	4
 
