@@ -15,7 +15,7 @@ extern "C" {
 #include <string.h>
 #include <stdlib.h>
 
-#define READ_BUFF_LENGTH	4
+#define READ_BUFF_LENGTH	(4096<<1)
 
 class _FreeAtEnd
 {
