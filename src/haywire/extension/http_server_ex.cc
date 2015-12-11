@@ -10,8 +10,11 @@ extern "C" {
 #include "uv.h"
 
 }
+
 #include <fcntl.h>
 
+#include <cstring>
+#include <cstdlib>
 
 #define READ_BUFF_LENGTH	4
 
