@@ -22,3 +22,4 @@ typedef struct
 
 hw_http_response hw_create_http_response(http_connection* connection);
 hw_string* create_response_buffer(hw_http_response* response);
+hw_string* create_response_file_header_buffer(hw_http_response* response, const char *file);

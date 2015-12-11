@@ -7,6 +7,8 @@
 #include "khash.h"
 #include "hw_string.h"
 
+#include <sys/stat.h>
+
 #define CRLF "\r\n"
 KHASH_MAP_INIT_STR(string_hashmap, char*)
 
@@ -110,5 +112,50 @@ hw_string* create_response_buffer(hw_http_response* response)
         append_string(response_string, &resp->body);
     }
     APPENDSTRING(response_string, CRLF);
+    return response_string;
+}
+
+int get_file_length(const char *file) {
+	struct stat theS;
+	if( stat(file, &theS) < 0 ) {
+		return 0;
+	}
+	return theS.st_size;
+}
+
+hw_string* create_response_file_header_buffer(hw_http_response* response, const char *file)
+{
+    http_response* resp = (http_response*)response;
+    hw_string* response_string = malloc(sizeof(hw_string));
+    hw_string* cached_entry = get_cached_request(resp->status_code.value);
+    hw_string content_length;
+	int file_length = get_file_length(file);
+
+    int i = 0;
+    response_string->value = calloc(1024 * 1024, 1);
+    response_string->length = 0;
+    append_string(response_string, cached_entry);
+    
+    for (i=0; i< resp->number_of_headers; i++)
+    {
+        http_header header = resp->headers[i];
+        append_string(response_string, &header.name);
+        APPENDSTRING(response_string, ": ");
+        append_string(response_string, &header.value);
+        APPENDSTRING(response_string, CRLF);
+    }
+    
+    /* Add the body */
+    APPENDSTRING(response_string, "Content-Length: ");
+    
+    string_from_int(&content_length, file_length, 10);
+    append_string(response_string, &content_length);
+    APPENDSTRING(response_string, CRLF CRLF);
+    
+    //if (resp->body.length > 0)
+    //{
+    //    append_string(response_string, &resp->body);
+    //}
+    //APPENDSTRING(response_string, CRLF);
     return response_string;
 }

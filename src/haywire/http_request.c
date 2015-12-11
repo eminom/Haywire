@@ -9,6 +9,7 @@
 #include "http_response.h"
 #include "http_parser.h"
 #include "http_server.h"
+#include "extension/http_server_ex.h"
 #include "http_connection.h"
 #include "server_stats.h"
 #include "route_compare_method.h"
@@ -315,6 +316,22 @@ void hw_http_response_send(hw_http_response* response, void* user_data, http_res
     write_context->user_data = user_data;
     write_context->callback = callback;
     http_server_write_response(write_context, response_buffer);
+    resp->sent = 1;
+    
+    free(response_buffer);
+    hw_free_http_response(response);
+}
+
+void hw_http_response_send_file(hw_http_response* response, void* user_data, const char *filepath, http_response_complete_callback callback)
+{
+    hw_write_context* write_context = malloc(sizeof(hw_write_context));
+    http_response* resp = (http_response*)response;
+    hw_string* response_buffer = create_response_file_header_buffer(response, filepath);
+    
+    write_context->connection = resp->connection;
+    write_context->user_data = user_data;
+    write_context->callback = callback;
+    http_server_write_file(write_context, response_buffer, filepath);
     resp->sent = 1;
     
     free(response_buffer);
