@@ -148,7 +148,8 @@ hw_string* create_response_file_header_buffer(hw_http_response* response, const 
     /* Add the body */
     APPENDSTRING(response_string, "Content-Length: ");
     
-    string_from_int(&content_length, file_length, 10);
+    //string_from_int(&content_length, file_length, 10);
+	string_from_int_10base(&content_length, file_length);
     append_string(response_string, &content_length);
     APPENDSTRING(response_string, CRLF CRLF);
     

@@ -57,16 +57,18 @@ private:
 
 void http_server_after_file_write(uv_write_t *req, int status);
 
-inline void _FinishWebReq(hw_write_context* writ_ctx, uv_write_t *write_req)
-{
-	if( ! writ_ctx->connection->keep_alive && write_req && write_req->handle)
-	{
+inline void _FinishWebReq(hw_write_context* writ_ctx, uv_write_t *write_req) {
+	if( ! writ_ctx->connection->keep_alive ) {
 		//As a matter of fact, the handle below is from context's connection stream.
 		// Which is loaded as a new write request is issued.
-		uv_close((uv_handle_t*)(write_req->handle), http_stream_on_close);
+		//~ The simple fact: write_req->handle == &(writ_ctx->connection->stream) if write_req and write_req->handle.
+		if(write_req && write_req->handle) {
+			uv_close((uv_handle_t*)(write_req->handle), http_stream_on_close);
+		} else {
+			uv_close((uv_handle_t*)&(writ_ctx->connection->stream), http_stream_on_close);
+		}
 	}
-	if( writ_ctx->callback )
-	{
+	if( writ_ctx->callback ) {
 		writ_ctx->callback(writ_ctx->user_data);
 	}
 	free(writ_ctx);
