@@ -46,3 +46,11 @@ void string_from_int(hw_string* str, int val, int base)
     str->value = &buf[i+1];
     str->length = length;
 }
+
+void string_from_int_10base(hw_string* str, int val)
+{
+	static char buf[56];
+	sprintf(buf, "%d", val);
+	str->value = buf;
+	str->length = strlen(buf);
+}
